@@ -1,0 +1,39 @@
+# Codemagic Configuration for Futevôlei Salvador App (Android / Capacitor Cloud Build)
+workflows:
+  android-build:
+    name: Compilar Aplicativo Android (APK / AAB)
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    environment:
+      node: latest
+      groups:
+        - keystore_credentials # For release signing if needed later
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+        - pattern: master
+    scripts:
+      - name: Instalar Dependências NPM
+        script: |
+          npm ci
+      - name: Build do Web App (Vite React)
+        script: |
+          npm run build
+      - name: Inicializar Capacitor e Plataforma Android na Nuvem
+        script: |
+          # Garante que as pastas nativas existam na máquina de compilação da nuvem
+          npx cap init "Futevôlei Salvador" "com.diegospiner.futvoleiapp" --web-dir="dist" || true
+          npx cap add android || true
+          npx cap sync android
+      - name: Compilar APK de Produção (Android)
+        script: |
+          cd android
+          # Dá permissão para execução do Gradle wrapper
+          chmod +x gradlew
+          # Compila o APK de produção pré-instalável
+          ./gradlew assembleRelease
+    artifacts:
+      - android/app/build/outputs/apk/**/*.apk
+      - android/app/build/outputs/bundle/**/*.aab

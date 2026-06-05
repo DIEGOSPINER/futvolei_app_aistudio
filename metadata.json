@@ -1,0 +1,6 @@
+{
+  "name": "Estrutura Firestore para Futevôlei",
+  "description": "Simulador e modelador interativo de banco de dados Firebase Firestore para gerenciar jogadores de futevôlei, arenas, rankeamento e estatísticas mensais.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
